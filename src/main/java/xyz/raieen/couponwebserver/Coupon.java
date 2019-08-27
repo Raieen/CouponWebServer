@@ -24,6 +24,11 @@ public class Coupon {
         this.redeemed = redeemed;
     }
 
+    /*
+     * Getters/Setters
+     * I wish java had proper data classes...
+     */
+
     public String getId() {
         return id;
     }

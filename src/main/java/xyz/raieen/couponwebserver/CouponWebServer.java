@@ -1,26 +1,43 @@
 package xyz.raieen.couponwebserver;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import java.util.Properties;
 
+@Component
+@Configuration
 @SpringBootApplication
 public class CouponWebServer {
 
-    //    private static Gmail gmail;
-    public static final String USER = "highfivecouponnoreply@gmail.com";
+    static final String COUPON_ROOT = "http://raieen.xyz:8080/coupon/";
+    public static final String EMAIL_SENDER = "highfivecouponnoreply@gmail.com";
     private static Session session;
 
+    private static EmailSender emailSender;
 
     public static void main(String[] args) throws Exception {
         // TODO: Put this in some config... don't hardcodre this!!
         String pass = "ENGwu49fKagXGzZjaFyv9HfNCArg9J7Ahdykq7Dw8p2hUr2Jw79YNJzB9FfxNQ9HXtiKw4tstSKMKW3QiVZfWPDAcT9nfzKkLGeh";
 
-        // Email Setup
+        /*
+         * Configuration
+         * Not using @Value since injection is done after calling run
+         */
+
+        /*
+         * Email Setup
+         */
+        emailSender = new EmailSender(session, "xxx");
+
+
+        // TODO: 2019-08-27 Read this from a properties file.
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "465");
@@ -35,39 +52,13 @@ public class CouponWebServer {
             }
         });
 
-//        // Setup Gmail
-//        NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-//        JsonFactory jsonFactory = new JacksonFactory();
-//        final String CREDENTIALS = "credentials.json";
-//
-//        final String applicationId = "couponwebserver-sender";
-//
-//        // Credentials
-//        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new FileReader(CREDENTIALS));
-//        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, clientSecrets, Collections.singleton(GmailScopes.GMAIL_SEND)).build();
-//
-//        LocalServerReceiver receiver = new LocalServerReceiver.Builder().build();
-//
-//        Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize(USER);
-//
-//        // Auth
-//        gmail = new Gmail.Builder(httpTransport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(applicationId).build();
-
+        /*
+         * Spring
+         */
         SpringApplication.run(CouponWebServer.class, args);
     }
 
-    public static void sendEmail(Coupon coupon) {
-        try {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(USER));
-            message.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(coupon.getReceipient()));
-            message.setSubject(String.format("%d %s %s", coupon.getQuantity(),
-                    coupon.isRedeemable() ? "Redeemable" : "Non-Redeemable", coupon.getAction())); // Eg. 1 Non-Redeemable High Five
-            message.setText(String.format("Hello. Your coupon (%d %s) can be found here, %s", coupon.getQuantity(), coupon.getAction(), "http://raieen.xyz:8080/coupon/" + coupon.getId()));
-
-            Transport.send(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+    public static EmailSender getEmailSender() {
+        return emailSender;
     }
 }
