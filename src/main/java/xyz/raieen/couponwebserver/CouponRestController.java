@@ -20,7 +20,7 @@ public class CouponRestController {
     public Coupon createCoupon(@RequestBody Coupon input, @RequestHeader String secret) {
         if (!authorized(secret)) return null;
 
-        Coupon coupon = new Coupon(input.isRedeemable(), input.getAction(), input.getReceipient(), input.getQuantity(), 0);
+        Coupon coupon = new Coupon(input.isRedeemable(), input.getAction(), input.getRecipient(), input.getQuantity(), 0);
         Coupon result = couponsRepository.insert(coupon);
 
         try {

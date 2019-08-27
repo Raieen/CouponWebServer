@@ -1,8 +1,5 @@
 package xyz.raieen.couponwebserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -23,7 +20,7 @@ public class EmailSender {
     public void sendCouponEmail(Coupon coupon) throws MessagingException {
         MimeMessage mimeMessage = new MimeMessage(session);
         mimeMessage.setFrom(emailSender);
-        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(coupon.getReceipient()));
+        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(coupon.getRecipient()));
         String redeemStatus = coupon.isRedeemable() ? "Redeemable" : "Non-Redeemable";
         mimeMessage.setSubject(String.format(CouponWebServer.getSubjectFormat(), coupon.getQuantity(), redeemStatus, coupon.getAction()));
         mimeMessage.setText(String.format(CouponWebServer.getBodyFormat(), coupon.getQuantity(), coupon.getAction(), CouponUtils.formatCouponURL(coupon.getId())));
