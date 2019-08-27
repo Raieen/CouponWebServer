@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon</title>
+    <link rel="stylesheet" href="/css/coupon.css">
+</head>
+<body>
+<div class="parent">
+    <div class="qr_section">
+        <img width="256px" height="256px" th:src="@{'data:image/jpeg;base64,'+${qrimage}}"/>
+    </div>
+
+    <div class="coupon_main">
+        <h2>Coupon</h2>
+        <h2 th:text="${coupon.quantity + ' ' + redeemable}"></h2>
+        <h2 class="action" th:text="${coupon.action}">High Five</h2>
+        <p class="terms"> Product availability varies by location. Not valid with any other offer.
+            No cash value.
+            No substitutions. No rain checks. Coupon may not be copied or duplicated in any way.
+            Void where prohibited by law. Valid only at participating Ryan Sue's. Any other use
+            constitutes fraud. Offer valid while supplies last.</p>
+    </div>
+</div>
+</body>
+</html>

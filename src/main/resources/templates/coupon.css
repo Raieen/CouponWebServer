@@ -1,0 +1,34 @@
+.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: auto;
+    width: 80%;
+
+    background-color: #FFF;
+    box-shadow: 0 10px 6px -6px #777;
+}
+
+.qr_section {
+
+}
+
+.action {
+    background-color: #E8EAF6;
+    box-shadow: 0 10px 6px -6px #777;
+}
+
+.coupon_main {
+    flex-basis: 40%;
+}
+
+body {
+    background-color: #F5F5F5;
+}
+
+.terms {
+    font-size: .7em;
+}
+
+
