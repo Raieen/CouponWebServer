@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Utility class for coupons.
  */
-public final class CouponUtils {
+final class CouponUtils {
 
     /**
      * Returns a formatted coupon url given the coupon id.
@@ -26,7 +26,7 @@ public final class CouponUtils {
      * @param couponId coupon id
      * @return Returns the coupon formatted string url with coupon id
      */
-    public static final String formatCouponURL(String couponId) {
+    public static String formatCouponURL(String couponId) {
         return String.format(CouponWebServer.getCouponURLFormat(), couponId);
     }
 
@@ -39,7 +39,7 @@ public final class CouponUtils {
      * @param contents contents in the qr code
      * @return Returns base64 representation of a qr code of contents
      */
-    public static final String getQRBase64(String contents) throws WriterException, IOException {
+    private static String getQRBase64(String contents) throws WriterException, IOException {
         Map<EncodeHintType, Object> map = new HashMap<>();
         map.put(EncodeHintType.QR_VERSION, 10); // "Big" QR
         map.put(EncodeHintType.MARGIN, 0);
@@ -62,7 +62,7 @@ public final class CouponUtils {
      * @throws WriterException Throws WriterException if something went wrong making the qr code
      * @throws IOException     Throws IOException if something went wrong writing the qr code
      */
-    public static final String getCouponQRBase64(String couponId) throws WriterException, IOException {
+    public static String getCouponQRBase64(String couponId) throws WriterException, IOException {
         return getQRBase64(formatCouponURL(couponId));
     }
 }

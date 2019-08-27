@@ -93,7 +93,7 @@ public class Coupon {
         return "Coupon{" +
                 "redeemable=" + redeemable +
                 ", action='" + action + '\'' +
-                ", receipient='" + recipient + '\'' +
+                ", recipient='" + recipient + '\'' +
                 ", quantity=" + quantity +
                 ", redeemed=" + redeemed +
                 '}';

@@ -19,7 +19,7 @@ public class CouponController {
 
     @Autowired
     CouponsRepository couponsRepository;
-    Logger logger = LoggerFactory.getLogger(CouponController.class);
+    private Logger logger = LoggerFactory.getLogger(CouponController.class);
 
     /**
      * Populates model with the coupon's details if possible.
@@ -49,7 +49,7 @@ public class CouponController {
         try {
             model.addAttribute("qrimage", CouponUtils.getCouponQRBase64(id));
         } catch (WriterException | IOException e) {
-            logger.error(String.format("Error generating qr image base64 for coupon %s\n%e", id, e.getMessage()));
+            logger.error(String.format("Error generating qr image base64 for coupon %s\n%s", id, e.getMessage()));
             return "error";
         }
         model.addAttribute("coupon", coupon);

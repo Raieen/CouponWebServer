@@ -16,7 +16,7 @@ public class CouponRestController {
 
     @Autowired
     CouponsRepository couponsRepository;
-    Logger logger = LoggerFactory.getLogger(CouponRestController.class);
+    private Logger logger = LoggerFactory.getLogger(CouponRestController.class);
 
     /**
      * Creates a coupon if authorized.
@@ -63,7 +63,7 @@ public class CouponRestController {
      *
      * @param id     coupon id
      * @param secret secret key. Return null if invalid secret
-     * @reutrn Returns coupon if valid with the timestamp set as current time, null otherwise.
+     * @return  Returns coupon if valid with the timestamp set as current time, null otherwise.
      */
     @PostMapping(value = "/coupon/{id}/redeem")
     public Coupon redeemCoupon(@PathVariable String id, @RequestHeader String secret) {
@@ -93,7 +93,7 @@ public class CouponRestController {
         return couponsRepository.insert(new Coupon(true, "High Five", "ryan.sue@raieen.xyz", 1, 0));
     }
 
-    public boolean authorized(String secret) {
+    private boolean authorized(String secret) {
         return secret.equals(CouponWebServer.getCouponSecret());
     }
 }
