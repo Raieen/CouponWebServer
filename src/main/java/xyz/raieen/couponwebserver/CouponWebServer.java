@@ -25,10 +25,10 @@ public class CouponWebServer {
         Properties properties = new Properties();
         properties.load(CouponWebServer.class.getClassLoader().getResourceAsStream("application.properties"));
 
-        couponURLFormat = properties.getProperty("coupon.urlformat");
-        couponSecret = properties.getProperty("coupon.secret");
-        subjectFormat = properties.getProperty("coupon.email.subject");
-        bodyFormat = properties.getProperty("coupon.email.body");
+        couponURLFormat = properties.getProperty("coupon.urlformat", "localhost:8080/coupon/%s");
+        couponSecret = properties.getProperty("coupon.secret", "secret");
+        subjectFormat = properties.getProperty("coupon.email.subject", "Subject");
+        bodyFormat = properties.getProperty("coupon.email.body", "Body");
 
         /*
          * Email Setup
@@ -36,18 +36,20 @@ public class CouponWebServer {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(properties.getProperty("mail.sender"),
-                        properties.getProperty("mail.password"));
+                return new PasswordAuthentication(properties.getProperty("mail.sender", "me@localhost"),
+                        properties.getProperty("mail.password", "password"));
             }
         });
 
-        emailSender = new EmailSender(session, properties.getProperty("mail.sender"));
+        emailSender = new EmailSender(session, properties.getProperty("mail.sender", "me@localhost"));
 
         /*
          * Spring
          */
         SpringApplication.run(CouponWebServer.class, args);
     }
+
+    // Getters
 
     public static EmailSender getEmailSender() {
         return emailSender;
