@@ -1,5 +1,7 @@
 package xyz.raieen.couponwebserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ public class CouponRestController {
 
     @Autowired
     CouponsRepository couponsRepository;
+    Logger logger = LoggerFactory.getLogger(CouponRestController.class);
 
     // Create
     @PutMapping(value = "/coupon/")
@@ -23,7 +26,7 @@ public class CouponRestController {
         try {
             CouponWebServer.getEmailSender().sendCouponEmail(coupon);
         } catch (MessagingException e) {
-            e.printStackTrace(); // TODO: 2019-08-27 Error handling.
+            logger.error(String.format("Error sending email for coupon %s\n%s", coupon.getId(), e.getMessage()));
             return null;
         }
 
@@ -34,6 +37,7 @@ public class CouponRestController {
     @PostMapping(value = "/coupon/{id}")
     public Coupon getCoupon(@PathVariable String id, @RequestHeader String secret) {
         if (!authorized(secret)) return null;
+        logger.debug(String.format("Returning coupon %s", id));
         return couponsRepository.findById(id).orElse(null);
     }
 
@@ -43,10 +47,14 @@ public class CouponRestController {
         if (!authorized(secret)) return null;
 
         Coupon coupon = couponsRepository.findById(id).orElse(null);
-        if (coupon == null) return null; // Can't find the coupon
+        if (coupon == null) {
+            logger.debug(String.format("Coupon %s not found.", id));
+            return null; // Can't find the coupon
+        }
 
         // Redeem coupon
         coupon.setRedeemed(System.currentTimeMillis());
+        logger.debug(String.format("Redeeming coupon %s", id));
         return couponsRepository.save(coupon);
     }
 

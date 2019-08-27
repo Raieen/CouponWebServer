@@ -1,6 +1,8 @@
 package xyz.raieen.couponwebserver;
 
 import com.google.zxing.WriterException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ public class CouponController {
 
     @Autowired
     CouponsRepository couponsRepository;
+    Logger logger = LoggerFactory.getLogger(CouponController.class);
 
     @RequestMapping("/coupon/{id}")
     public String serveCoupon(@PathVariable String id, Model model) {
@@ -21,22 +24,25 @@ public class CouponController {
 
         // Coupon not found... error page
         if (coupon == null) {
+            logger.debug(String.format("Coupon %s not found.", id));
             return "error";
         }
 
         // Coupon has been redeemed
         if (coupon.getRedeemed() != 0) {
+            logger.debug(String.format("Coupon %s was redeemed.", id));
             return "redeemed";
         }
 
         try {
             model.addAttribute("qrimage", CouponUtils.getCouponQRBase64(id));
         } catch (WriterException | IOException e) {
-            // TODO: 2019-08-27 Log it.
+            logger.error(String.format("Error generating qr image base64 for coupon %s\n%e", id, e.getMessage()));
             return "error";
         }
         model.addAttribute("coupon", coupon);
         model.addAttribute("redeemable", coupon.isRedeemable() ? "Redeemable" : "Non-Redeemable");
+        logger.debug(String.format("Serving coupon %s", id));
         return "coupon";
     }
 }
