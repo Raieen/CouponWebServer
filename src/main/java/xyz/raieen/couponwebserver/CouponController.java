@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 
+/**
+ * Coupon Controller
+ */
 @Controller
 public class CouponController {
 
@@ -18,6 +21,15 @@ public class CouponController {
     CouponsRepository couponsRepository;
     Logger logger = LoggerFactory.getLogger(CouponController.class);
 
+    /**
+     * Populates model with the coupon's details if possible.
+     * If the coupon does not exist or something went wrong, it serves an error page
+     * If the coupon has been redeemed, the redeemed page is served.
+     *
+     * @param id    Coupon Id
+     * @param model Model
+     * @return template
+     */
     @RequestMapping("/coupon/{id}")
     public String serveCoupon(@PathVariable String id, Model model) {
         Coupon coupon = couponsRepository.findById(id).orElse(null);

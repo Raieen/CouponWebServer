@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.util.List;
 
+/**
+ * REST Controller
+ */
 @RestController
 public class CouponRestController {
 
@@ -15,7 +18,13 @@ public class CouponRestController {
     CouponsRepository couponsRepository;
     Logger logger = LoggerFactory.getLogger(CouponRestController.class);
 
-    // Create
+    /**
+     * Creates a coupon if authorized.
+     *
+     * @param input  coupon to be created.
+     * @param secret secret key. Return null if invalid secret
+     * @return Returns the new coupon if successful, null otherwise.
+     */
     @PutMapping(value = "/coupon/")
     public Coupon createCoupon(@RequestBody Coupon input, @RequestHeader String secret) {
         if (!authorized(secret)) return null;
@@ -34,6 +43,14 @@ public class CouponRestController {
     }
 
     // Read Coupon
+
+    /**
+     * Returns the coupon given the id if it exists.
+     *
+     * @param id     Coupon id
+     * @param secret secret key. Return null if invalid secret
+     * @return Returns coupon if the id is valid
+     */
     @PostMapping(value = "/coupon/{id}")
     public Coupon getCoupon(@PathVariable String id, @RequestHeader String secret) {
         if (!authorized(secret)) return null;
@@ -41,7 +58,13 @@ public class CouponRestController {
         return couponsRepository.findById(id).orElse(null);
     }
 
-    // Redeem Coupon
+    /**
+     * Redeem a coupon given the id. The coupon's redeemed timestamp is set as current time.
+     *
+     * @param id     coupon id
+     * @param secret secret key. Return null if invalid secret
+     * @reutrn Returns coupon if valid with the timestamp set as current time, null otherwise.
+     */
     @PostMapping(value = "/coupon/{id}/redeem")
     public Coupon redeemCoupon(@PathVariable String id, @RequestHeader String secret) {
         if (!authorized(secret)) return null;

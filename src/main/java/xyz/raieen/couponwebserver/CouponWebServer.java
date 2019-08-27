@@ -8,13 +8,18 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import java.util.Properties;
 
+/**
+ * Web Server
+ */
 @SpringBootApplication
 public class CouponWebServer {
 
+    // Application Variables from application.properties
     private static String couponURLFormat;
     private static String couponSecret;
     private static String subjectFormat;
     private static String bodyFormat;
+
     private static EmailSender emailSender;
 
     public static void main(String[] args) throws Exception {

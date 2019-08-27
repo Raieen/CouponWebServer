@@ -3,19 +3,34 @@ package xyz.raieen.couponwebserver;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Represents a coupon
+ */
 @Document(collection = "coupons")
 public class Coupon {
 
     @Id
-    String id;
+    String id; // Spring
     private boolean redeemable;
     private String action, recipient;
     private int quantity;
     private long redeemed;
 
+    /**
+     * Needed for Spring
+     */
     public Coupon() {
     }
 
+    /**
+     * Default Constructor
+     *
+     * @param redeemable weather the action is redeemable
+     * @param action     action on the coupon ie. high five
+     * @param recipient  email of recipient
+     * @param quantity   quantity of action. ie. 5 high fives.
+     * @param redeemed   timestamp of when the coupon was redeemed, 0 if it has not been redeemed
+     */
     public Coupon(boolean redeemable, String action, String recipient, int quantity, long redeemed) {
         this.redeemable = redeemable;
         this.action = action;
