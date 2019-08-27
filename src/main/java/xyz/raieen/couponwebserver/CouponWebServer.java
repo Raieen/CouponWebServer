@@ -1,56 +1,47 @@
 package xyz.raieen.couponwebserver;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import java.util.Properties;
 
-@Component
-@Configuration
 @SpringBootApplication
 public class CouponWebServer {
 
-    static final String COUPON_ROOT = "http://raieen.xyz:8080/coupon/";
-    public static final String EMAIL_SENDER = "highfivecouponnoreply@gmail.com";
-    private static Session session;
-
+    private static String couponURLFormat;
+    private static String couponSecret;
+    private static String subjectFormat;
+    private static String bodyFormat;
     private static EmailSender emailSender;
 
     public static void main(String[] args) throws Exception {
-        // TODO: Put this in some config... don't hardcodre this!!
-        String pass = "ENGwu49fKagXGzZjaFyv9HfNCArg9J7Ahdykq7Dw8p2hUr2Jw79YNJzB9FfxNQ9HXtiKw4tstSKMKW3QiVZfWPDAcT9nfzKkLGeh";
-
         /*
-         * Configuration
+         * Properties
          * Not using @Value since injection is done after calling run
          */
+        Properties properties = new Properties();
+        properties.load(CouponWebServer.class.getClassLoader().getResourceAsStream("application.properties"));
+
+        couponURLFormat = properties.getProperty("coupon.urlformat");
+        couponSecret = properties.getProperty("coupon.secret");
+        subjectFormat = properties.getProperty("coupon.email.subject");
+        bodyFormat = properties.getProperty("coupon.email.body");
 
         /*
          * Email Setup
          */
-        emailSender = new EmailSender(session, "xxx");
-
-
-        // TODO: 2019-08-27 Read this from a properties file.
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.socketFactory.port", "465");
-        properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
-        session = Session.getInstance(properties, new Authenticator() {
+        Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("highfivecouponnoreply@gmail.com", pass);
+                return new PasswordAuthentication(properties.getProperty("mail.sender"),
+                        properties.getProperty("mail.password"));
             }
         });
+
+        emailSender = new EmailSender(session, properties.getProperty("mail.sender"));
 
         /*
          * Spring
@@ -60,5 +51,21 @@ public class CouponWebServer {
 
     public static EmailSender getEmailSender() {
         return emailSender;
+    }
+
+    public static String getCouponURLFormat() {
+        return couponURLFormat;
+    }
+
+    public static String getCouponSecret() {
+        return couponSecret;
+    }
+
+    public static String getSubjectFormat() {
+        return subjectFormat;
+    }
+
+    public static String getBodyFormat() {
+        return bodyFormat;
     }
 }

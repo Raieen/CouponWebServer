@@ -63,6 +63,6 @@ public class CouponRestController {
     }
 
     public boolean authorized(String secret) {
-        return secret.equals("abc");
+        return secret.equals(CouponWebServer.getCouponSecret());
     }
 }

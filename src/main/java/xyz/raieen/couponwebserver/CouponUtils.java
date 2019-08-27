@@ -14,12 +14,10 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import static xyz.raieen.couponwebserver.CouponWebServer.COUPON_ROOT;
-
 public class CouponUtils {
 
     public static String formatCouponURL(String couponId) {
-        return String.format("%s%s", COUPON_ROOT, couponId);
+        return String.format(CouponWebServer.getCouponURLFormat(), couponId);
     }
 
     /**

@@ -21,9 +21,9 @@ public class EmailSender {
         MimeMessage mimeMessage = new MimeMessage(session);
         mimeMessage.setFrom(emailSender);
         mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(coupon.getReceipient()));
-        mimeMessage.setSubject(String.format("%d %s %s", coupon.getQuantity(),
-                coupon.isRedeemable() ? "Redeemable" : "Non-Redeemable", coupon.getAction())); // Eg. 1 Non-Redeemable High Five
-        mimeMessage.setText(String.format("Hello. Your coupon (%d %s) can be found here, %s", coupon.getQuantity(), coupon.getAction(), "http://raieen.xyz:8080/coupon/" + coupon.getId()));
+        String redeemStatus = coupon.isRedeemable() ? "Redeemable" : "Non-Redeemable";
+        mimeMessage.setSubject(String.format(CouponWebServer.getSubjectFormat(), coupon.getQuantity(), redeemStatus, coupon.getAction()));
+        mimeMessage.setText(String.format(CouponWebServer.getBodyFormat(), coupon.getQuantity(), coupon.getAction(), CouponUtils.formatCouponURL(coupon.getId())));
         Transport.send(mimeMessage);
     }
 }
