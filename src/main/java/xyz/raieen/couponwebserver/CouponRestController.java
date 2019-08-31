@@ -42,8 +42,6 @@ public class CouponRestController {
         return result;
     }
 
-    // Read Coupon
-
     /**
      * Returns the coupon given the id if it exists.
      *
@@ -79,18 +77,6 @@ public class CouponRestController {
         coupon.setRedeemed(System.currentTimeMillis());
         logger.debug(String.format("Redeeming coupon %s", id));
         return couponsRepository.save(coupon);
-    }
-
-    // TODO: 17/05/19 Debug things, remove these.
-
-    @GetMapping(value = "/coupon/debug")
-    public List<Coupon> dumpCoupons() {
-        return couponsRepository.findAll();
-    }
-
-    @GetMapping(value = "/coupon/create")
-    public Coupon debugCreateCoupon() {
-        return couponsRepository.insert(new Coupon(true, "High Five", "ryan.sue@raieen.xyz", 1, 0));
     }
 
     private boolean authorized(String secret) {
